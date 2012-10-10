@@ -399,6 +399,18 @@ class rsyslog (
     }
   }
 
+  if $rsyslog::bool_monitor == true and $rsyslog::service != '' {
+    monitor::process { 'rsyslog_process':
+      process  => $rsyslog::process,
+      service  => $rsyslog::service,
+      pidfile  => $rsyslog::pid_file,
+      user     => $rsyslog::process_user,
+      argument => $rsyslog::process_args,
+      tool     => $rsyslog::monitor_tool,
+      enable   => $rsyslog::manage_monitor,
+    }
+  }
+
   if ($rsyslog::mode == 'server') or ($rsyslog::syslog_server == $fqdn) {
     ### Service monitoring, if enabled ( monitor => true )
     if $rsyslog::bool_monitor == true {
@@ -407,17 +419,6 @@ class rsyslog (
           protocol => $rsyslog::protocol,
           port     => $rsyslog::port,
           target   => $rsyslog::monitor_target,
-          tool     => $rsyslog::monitor_tool,
-          enable   => $rsyslog::manage_monitor,
-        }
-      }
-      if $rsyslog::service != '' {
-        monitor::process { 'rsyslog_process':
-          process  => $rsyslog::process,
-          service  => $rsyslog::service,
-          pidfile  => $rsyslog::pid_file,
-          user     => $rsyslog::process_user,
-          argument => $rsyslog::process_args,
           tool     => $rsyslog::monitor_tool,
           enable   => $rsyslog::manage_monitor,
         }
