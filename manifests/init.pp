@@ -5,6 +5,15 @@
 #
 # == Parameters
 #
+# Module specific variables
+# [*syslog_server*]
+#   Ip or hostname of a central syslog server. Note that in order to apply
+#   it you need a template that uses this $rsyslog::syslog_server variable 
+#
+# [*mode*]
+#   Syslog server mode. If set to server it will bind to the syslog port
+#   and act as a central server
+#
 # Standard class parameters
 # Define the general class behaviour and customizations
 #
@@ -205,6 +214,8 @@
 #   Alessandro Franceschi <al@lab42.it/>
 #
 class rsyslog (
+  $syslog_server       = params_lookup( 'syslog_server' ),
+  $mode                = params_lookup( 'mode' ),
   $my_class            = params_lookup( 'my_class' ),
   $source              = params_lookup( 'source' ),
   $source_dir          = params_lookup( 'source_dir' ),
@@ -388,46 +399,46 @@ class rsyslog (
     }
   }
 
-
-  ### Service monitoring, if enabled ( monitor => true )
-  if $rsyslog::bool_monitor == true {
-    if $rsyslog::port != '' {
-      monitor::port { "rsyslog_${rsyslog::protocol}_${rsyslog::port}":
-        protocol => $rsyslog::protocol,
-        port     => $rsyslog::port,
-        target   => $rsyslog::monitor_target,
-        tool     => $rsyslog::monitor_tool,
-        enable   => $rsyslog::manage_monitor,
+  if ($rsyslog::mode == 'server') or ($rsyslog::syslog_server == $fqdn) {
+    ### Service monitoring, if enabled ( monitor => true )
+    if $rsyslog::bool_monitor == true {
+      if $rsyslog::port != '' {
+        monitor::port { "rsyslog_${rsyslog::protocol}_${rsyslog::port}":
+          protocol => $rsyslog::protocol,
+          port     => $rsyslog::port,
+          target   => $rsyslog::monitor_target,
+          tool     => $rsyslog::monitor_tool,
+          enable   => $rsyslog::manage_monitor,
+        }
+      }
+      if $rsyslog::service != '' {
+        monitor::process { 'rsyslog_process':
+          process  => $rsyslog::process,
+          service  => $rsyslog::service,
+          pidfile  => $rsyslog::pid_file,
+          user     => $rsyslog::process_user,
+          argument => $rsyslog::process_args,
+          tool     => $rsyslog::monitor_tool,
+          enable   => $rsyslog::manage_monitor,
+        }
       }
     }
-    if $rsyslog::service != '' {
-      monitor::process { 'rsyslog_process':
-        process  => $rsyslog::process,
-        service  => $rsyslog::service,
-        pidfile  => $rsyslog::pid_file,
-        user     => $rsyslog::process_user,
-        argument => $rsyslog::process_args,
-        tool     => $rsyslog::monitor_tool,
-        enable   => $rsyslog::manage_monitor,
+  
+  
+    ### Firewall management, if enabled ( firewall => true )
+    if $rsyslog::bool_firewall == true and $rsyslog::port != '' {
+      firewall { "rsyslog_${rsyslog::protocol}_${rsyslog::port}":
+        source      => $rsyslog::firewall_src,
+        destination => $rsyslog::firewall_dst,
+        protocol    => $rsyslog::protocol,
+        port        => $rsyslog::port,
+        action      => 'allow',
+        direction   => 'input',
+        tool        => $rsyslog::firewall_tool,
+        enable      => $rsyslog::manage_firewall,
       }
     }
   }
-
-
-  ### Firewall management, if enabled ( firewall => true )
-  if $rsyslog::bool_firewall == true and $rsyslog::port != '' {
-    firewall { "rsyslog_${rsyslog::protocol}_${rsyslog::port}":
-      source      => $rsyslog::firewall_src,
-      destination => $rsyslog::firewall_dst,
-      protocol    => $rsyslog::protocol,
-      port        => $rsyslog::port,
-      action      => 'allow',
-      direction   => 'input',
-      tool        => $rsyslog::firewall_tool,
-      enable      => $rsyslog::manage_firewall,
-    }
-  }
-
 
   ### Debugging, if enabled ( debug => true )
   if $rsyslog::bool_debug == true {

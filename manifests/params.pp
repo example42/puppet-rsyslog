@@ -14,6 +14,10 @@
 #
 class rsyslog::params {
 
+  ### Module specific varibale
+  $mode = 'client'
+  $syslog_server = ''
+
   ### Application related parameters
 
   $package = $::operatingsystem ? {
@@ -29,7 +33,7 @@ class rsyslog::params {
   }
 
   $process = $::operatingsystem ? {
-    default => 'rsyslog',
+    default => 'rsyslogd',
   }
 
   $process_args = $::operatingsystem ? {
@@ -41,11 +45,11 @@ class rsyslog::params {
   }
 
   $config_dir = $::operatingsystem ? {
-    default => '/etc/rsyslog',
+    default => '/etc/rsyslog.d',
   }
 
   $config_file = $::operatingsystem ? {
-    default => '/etc/rsyslog/rsyslog.conf',
+    default => '/etc/rsyslog.conf',
   }
 
   $config_file_mode = $::operatingsystem ? {
@@ -74,14 +78,14 @@ class rsyslog::params {
   }
 
   $log_dir = $::operatingsystem ? {
-    default => '/var/log/rsyslog',
+    default => '',
   }
 
   $log_file = $::operatingsystem ? {
-    default => '/var/log/rsyslog/rsyslog.log',
+    default => '',
   }
 
-  $port = '42'
+  $port = '514'
   $protocol = 'tcp'
 
   # General Settings
