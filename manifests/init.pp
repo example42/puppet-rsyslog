@@ -339,6 +339,11 @@ class rsyslog (
     default   => template($rsyslog::template),
   }
 
+  $manage_source_dir = $rsyslog::source_dir ? {
+    ''        => undef,
+    default   => $rsyslog::source_dir,
+  }
+
   ### Managed resources
   package { $rsyslog::package:
     ensure => $rsyslog::manage_package,
@@ -368,18 +373,16 @@ class rsyslog (
   }
 
   # The whole rsyslog configuration directory can be recursively overriden
-  if $rsyslog::source_dir {
-    file { 'rsyslog.dir':
-      ensure  => directory,
-      path    => $rsyslog::config_dir,
-      require => Package[$rsyslog::package],
-      notify  => $rsyslog::manage_service_autorestart,
-      source  => $rsyslog::source_dir,
-      recurse => true,
-      purge   => $rsyslog::bool_source_dir_purge,
-      replace => $rsyslog::manage_file_replace,
-      audit   => $rsyslog::manage_audit,
-    }
+  file { 'rsyslog.dir':
+    ensure  => directory,
+    path    => $rsyslog::config_dir,
+    require => Package[$rsyslog::package],
+    notify  => $rsyslog::manage_service_autorestart,
+    source  => $rsyslog::manage_source_dir,
+    recurse => true,
+    purge   => $rsyslog::bool_source_dir_purge,
+    replace => $rsyslog::manage_file_replace,
+    audit   => $rsyslog::manage_audit,
   }
 
 
