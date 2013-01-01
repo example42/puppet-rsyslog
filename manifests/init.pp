@@ -392,6 +392,15 @@ class rsyslog (
   }
 
 
+  ### Disable syslogd service where present by default
+  if $::osfamily == 'RedHat' and $::lsbmajdistrelease == '5' {
+    service { 'syslog':
+      ensure => stopped,
+      enable => false,
+      before => Service['rsyslog'],
+    }
+  }
+
   ### Provide puppi data, if enabled ( puppi => true )
   if $rsyslog::bool_puppi == true {
     $classvars=get_class_args()
