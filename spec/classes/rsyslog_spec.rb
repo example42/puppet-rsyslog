@@ -126,11 +126,8 @@ describe 'rsyslog' do
     end
   end
 
-  describe 'Test service autorestart', :broken => true do
-    it 'should automatically restart the service, by default' do
-      content = catalogue.resource('file', 'rsyslog.conf').send(:parameters)[:notify]
-      content.should == 'Service[rsyslog]{:name=>"rsyslog"}'
-    end
+  describe 'Test service autorestart' do
+    it { should contain_file('rsyslog.conf').with_notify('Service[rsyslog]') }
   end
 
   describe 'Test service autorestart' do
