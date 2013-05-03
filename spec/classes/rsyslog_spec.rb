@@ -101,6 +101,24 @@ describe 'rsyslog' do
 
   end
 
+  describe 'Test customizations - content' do
+    let(:params) { {:content => "Rspec" } }
+
+    it 'should generate a valid template' do
+      content = catalogue.resource('file', 'rsyslog.conf').send(:parameters)[:content]
+      content.should match "Rspec"
+    end
+  end
+
+  describe 'Test customizations - template is preferred over content' do
+    let(:params) { {:content => "Rspec" , :template => "rsyslog/spec.erb" , :options => { 'opt_a' => 'value_a' } } }
+
+    it 'should generate a valid template' do
+      content = catalogue.resource('file', 'rsyslog.conf').send(:parameters)[:content]
+      content.should match "value_a"
+    end
+  end
+
   describe 'Test customizations - source' do
     let(:params) { {:source => "puppet://modules/rsyslog/spec" , :source_dir => "puppet://modules/rsyslog/dir/spec" , :source_dir_purge => true } }
 

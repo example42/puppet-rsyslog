@@ -45,6 +45,13 @@
 #   Note source and template parameters are mutually exclusive: don't use both
 #   Can be defined also by the (top scope) variable $rsyslog_template
 #
+# [*content*]
+#   Defines the content of the main configuration file, to be used as alternative
+#   to template when the content is populated on other ways.
+#   If defined, snmpd main config file has: content => $content
+#   Note: source, template and content are mutually exclusive.
+#   If a template is defined, that has precedence on the content parameter
+#
 # [*options*]
 #   An hash of custom options to be used in templates for arbitrary settings.
 #   Can be defined also by the (top scope) variable $rsyslog_options
@@ -221,6 +228,7 @@ class rsyslog (
   $source_dir          = params_lookup( 'source_dir' ),
   $source_dir_purge    = params_lookup( 'source_dir_purge' ),
   $template            = params_lookup( 'template' ),
+  $content             = params_lookup( 'content' ),
   $service_autorestart = params_lookup( 'service_autorestart' , 'global' ),
   $options             = params_lookup( 'options' ),
   $version             = params_lookup( 'version' ),
@@ -335,7 +343,10 @@ class rsyslog (
   }
 
   $manage_file_content = $rsyslog::template ? {
-    ''        => undef,
+    ''        => $rsyslog::content ? {
+      ''      => undef,
+      default => $rsyslog::content,
+    },
     default   => template($rsyslog::template),
   }
 
