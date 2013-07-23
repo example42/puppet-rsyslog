@@ -404,12 +404,14 @@ class rsyslog (
 
 
   ### Disable syslogd service where present by default
-  if $::osfamily == 'RedHat' and $::lsbmajdistrelease == '5' {
+  if $::osfamily == 'RedHat'
+  and $::lsbmajdistrelease == '5'
+  and ! defined(Service['syslog']) {
     service { 'syslog':
-      ensure => stopped,
-      enable => false,
+      ensure    => stopped,
+      enable    => false,
       hasstatus => true,
-      before => Service['rsyslog'],
+      before    => Service['rsyslog'],
     }
   }
 
