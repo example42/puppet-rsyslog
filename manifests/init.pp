@@ -408,6 +408,7 @@ class rsyslog (
     service { 'syslog':
       ensure => stopped,
       enable => false,
+      hasstatus => true,
       before => Service['rsyslog'],
     }
   }
