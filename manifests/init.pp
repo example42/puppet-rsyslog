@@ -8,7 +8,7 @@
 # Module specific variables
 # [*syslog_server*]
 #   Ip or hostname of a central syslog server. Note that in order to apply
-#   it you need a template that uses this $rsyslog::syslog_server variable 
+#   it you need a template that uses this $rsyslog::syslog_server variable
 #
 # [*mode*]
 #   Syslog server mode. If set to server it will bind to the syslog port
@@ -450,8 +450,8 @@ class rsyslog (
         }
       }
     }
-  
-  
+
+
     ### Firewall management, if enabled ( firewall => true )
     if $rsyslog::bool_firewall == true and $rsyslog::port != '' {
       firewall { "rsyslog_${rsyslog::protocol}_${rsyslog::port}":
