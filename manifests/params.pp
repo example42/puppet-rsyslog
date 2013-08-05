@@ -17,6 +17,7 @@ class rsyslog::params {
   ### Module specific varibale
   $mode = 'client'
   $syslog_server = ''
+  $syslog_server_port = '514'
 
   ### Application related parameters
 
