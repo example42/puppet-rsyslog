@@ -222,6 +222,7 @@
 #
 class rsyslog (
   $syslog_server       = params_lookup( 'syslog_server' ),
+  $syslog_server_port  = params_lookup( 'syslog_server_port' ),
   $mode                = params_lookup( 'mode' ),
   $my_class            = params_lookup( 'my_class' ),
   $source              = params_lookup( 'source' ),
