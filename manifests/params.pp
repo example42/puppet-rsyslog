@@ -72,7 +72,8 @@ class rsyslog::params {
   }
 
   $pid_file = $::operatingsystem ? {
-    default => '/var/run/rsyslog.pid',
+    /(?i:Debian|Ubuntu|Mint)/ => '/var/run/rsyslogd.pid',
+    default                   => '/var/run/rsyslog.pid',
   }
 
   $data_dir = $::operatingsystem ? {
