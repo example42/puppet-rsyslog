@@ -438,7 +438,7 @@ class rsyslog (
     }
   }
 
-  if ($rsyslog::mode == 'server') or ($rsyslog::syslog_server == $fqdn) {
+  if ($rsyslog::mode == 'server') or ($rsyslog::syslog_server == $::fqdn) {
     ### Service monitoring, if enabled ( monitor => true )
     if $rsyslog::bool_monitor == true {
       if $rsyslog::port != '' {

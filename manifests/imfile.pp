@@ -21,7 +21,7 @@
 #   Rsyslog polling interval on the log, in secords. Default: 10
 #
 # [*run_file_monitor*]
-#   If to enable file monitoring. Default true  
+#   If to enable file monitoring. Default true
 #
 # [*template*]
 #   Optional custom template to use to create the file in rsyslog.d
@@ -52,7 +52,7 @@ define rsyslog::imfile (
   $order            = '25',
   $ensure           = present,
   ) {
-  
+
   include rsyslog
 
   # rsyslog skipping file names that contain a "."
@@ -64,7 +64,7 @@ define rsyslog::imfile (
     owner   => $rsyslog::config_file_owner,
     group   => $rsyslog::config_file_group,
     mode    => $rsyslog::config_file_mode,
-    content => template("${template}"),
+    content => template($template),
     require => Package[$rsyslog::package],
     notify  => $rsyslog::manage_service_autorestart,
     replace => $rsyslog::manage_file_replace,
