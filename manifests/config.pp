@@ -7,7 +7,7 @@
 # [*source*]
 #   Sets the value of source parameter for the rsyslog fragment
 #
-# [*template*]
+# [*content*]
 #   Sets the value of content parameter for the rsyslog fragment
 #   Note: This option is alternative to the source one
 #
