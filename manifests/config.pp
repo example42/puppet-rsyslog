@@ -19,10 +19,12 @@
 #   Default 20
 #
 define rsyslog::config (
-  $ensure  = present,
-  $content = '',
-  $source  = '',
-  $order   = '20',
+  $ensure   = present,
+  $content  = '',
+  $template = '',
+  $options  = {},
+  $source   = '',
+  $order    = '20',
 ) {
 
   include rsyslog
@@ -35,11 +37,13 @@ define rsyslog::config (
     default   => $source,
   }
 
-  $manage_content = $content ? {
-    ''        => undef,
-    default   => $content,
+  $manage_content = $template ? {
+    ''        => $content ? {
+      ''      => undef,
+      default => $content,
+    },
+    default   => template($template),
   }
-
 
   file { "${rsyslog::config_dir}/${order}_${dname}.conf":
     ensure  => $ensure,
