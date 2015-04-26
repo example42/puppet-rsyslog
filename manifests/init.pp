@@ -362,12 +362,12 @@ class rsyslog (
   }
 
   service { 'rsyslog':
-    ensure     => $rsyslog::manage_service_ensure,
-    name       => $rsyslog::service,
-    enable     => $rsyslog::manage_service_enable,
-    hasstatus  => $rsyslog::service_status,
-    pattern    => $rsyslog::process,
-    require    => Package[$rsyslog::package],
+    ensure    => $rsyslog::manage_service_ensure,
+    name      => $rsyslog::service,
+    enable    => $rsyslog::manage_service_enable,
+    hasstatus => $rsyslog::service_status,
+    pattern   => $rsyslog::process,
+    require   => Package[$rsyslog::package],
   }
 
   file { 'rsyslog.conf':
