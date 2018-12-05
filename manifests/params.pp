@@ -26,7 +26,7 @@ class rsyslog::params {
   }
 
   $service = $::operatingsystem ? {
-    OpenSuSE => 'syslog',
+    'OpenSuSE' => 'syslog',
     default  => 'rsyslog',
   }
 
