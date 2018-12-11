@@ -399,7 +399,7 @@ class rsyslog (
 
 
   ### Include custom class if $my_class is set
-  if $rsyslog::my_class {
+  if $rsyslog::my_class and $rsyslog::my_class != '' {
     include $rsyslog::my_class
   }
 
